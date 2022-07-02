@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Algebra Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="scripts.js" defer></script>
+</head>
+<body>
+    <div class="heading">
+        <div class="title">Linear Algebra Calculator</div>
+        <div class="subtitle">Enter your Matrix Dimensions</div>
+    </div>
+    <div class="matrix-input">
+        <form class="matrix-dimensions">
+            <span>Row Dimensions:</span><input type="text" id="row-dimension">
+            <span>Column Dimensions:</span><input type="text" id="column-dimension">
+            <input type="button" class="set-matrix-dimensions" value="Build Matrix">
+        </form>
+        <div class="matrix-values">
+        </div>
+        <!-- Populate text areas to be able to enter matrix values-->
+        <div class="subtitle">Your Input:</div>
+        <div class="matrix-input"></div>
+    </div>
+    <div class="matrix-operations">Matrix Operations:
+        <button type="button">RREF</button>
+        <button type="button">REF</button>
+        <button type="button">LU Factorization</button>
+        <button type="button">Nul Space</button>
+        <button type="button">Col Space</button>
+        <button type="button">Inverse</button>
+    </div>
+</body>
+</html>
