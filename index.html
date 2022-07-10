@@ -11,27 +11,27 @@
 <body>
     <div class="heading">
         <div class="title">Linear Algebra Calculator</div>
-        <div class="subtitle">Enter your Matrix Dimensions</div>
     </div>
     <div class="matrix-input">
+        <div class="subtitle">Enter your Matrix Dimensions</div>
         <form class="matrix-dimensions">
-            <span>Row Dimensions:</span><input type="text" id="row-dimension">
-            <span>Column Dimensions:</span><input type="text" id="column-dimension">
-            <input type="button" class="set-matrix-dimensions" value="Build Matrix">
+            <input type="text" id="row-dimension">
+            <input type="text" id="column-dimension">
+            <input type="button" class="button-style" id="set-matrix-dimensions" value="Build Matrix">
         </form>
+    </div>
+    <div class="show-input">
         <div class="matrix-values">
         </div>
         <!-- Populate text areas to be able to enter matrix values-->
-        <div class="subtitle">Your Input:</div>
-        <div class="matrix-input"></div>
     </div>
     <div class="matrix-operations">Matrix Operations:
-        <button type="button" class="rref">Row Reduced Echelon Form</button>
-        <button type="button">REF</button>
-        <button type="button" class="lu-button">LU Factorization</button>
-        <button type="button">Nul Space</button>
-        <button type="button">Col Space</button>
-        <button type="button">Inverse</button>
+        <button type="button" class="button-style" id="rref">Row Reduced Echelon Form</button>
+        <button type="button" class="button-style">REF</button>
+        <button type="button" class="button-style" id="lu-button">LU Factorization</button>
+        <button type="button" class="button-style">Nul Space</button>
+        <button type="button" class="button-style">Col Space</button>
+        <button type="button" class="button-style">Inverse</button>
     </div>
     <div class="answer-label">Answer: </div>
 
@@ -51,7 +51,7 @@
         removeMatrixGrid(matrixGrid);
 
         matrixGrid.style.gridTemplateRows = `repeat(${rowDimension}, 20px)`;
-        matrixGrid.style.gridTemplateColumns = `repeat(${columnDimension}, 90px)`;
+        matrixGrid.style.gridTemplateColumns = `repeat(${columnDimension}, 60px)`;
 
         for(let rows = 0; rows < rowDimension*columnDimension; ++rows)
         {
@@ -61,6 +61,13 @@
             matrixGrid.insertAdjacentElement("beforeend", input);
         }
         return columnDimension;
+    }
+
+    function setMatrixDimensionPlaceholder()
+    {
+        document.getElementById("row-dimension").placeholder = "Row Dimension";
+        document.getElementById("column-dimension").placeholder = "Column Dimension";
+
     }
 
     function populateMatrix2dArray()
@@ -167,6 +174,22 @@
         answerGridMain.appendChild(answerGrid);
     }
 
+    function showAnswerTextMatrix(matrix){
+        const rowDimension = matrix.length;
+        const columnDimension = matrix[0].length;
+        let answerLabel = document.querySelector(".answer-label");
+        let table = document.createElement("table");
+        table.classList.add("text-matrix")
+        for(let row = 0; row < rowDimension; ++row)
+        {
+            const tr = table.insertRow();
+            for(let column = 0; column < columnDimension; ++column)
+            {
+                const td = tr.insertCell();
+                td.textContent = matrix[row][column];
+            }
+        }
+    }
     //to show answer along with a description label left of it
     function showAnswerPlusSpan(matrix, labelText)
     {
@@ -212,14 +235,14 @@
         showAnswerPlusSpan(lUMatrix["L"], "L: ");
         showAnswerPlusSpan(lUMatrix["U"], "U:");
     }
-
-    let matDimensionsButton = document.querySelector(".set-matrix-dimensions");
+    setMatrixDimensionPlaceholder();
+    let matDimensionsButton = document.querySelector("#set-matrix-dimensions");
     matDimensionsButton.addEventListener("click", setMatrixDimension);
 
-    let rrefButton = document.querySelector(".rref");
+    let rrefButton = document.querySelector("#rref");
     rrefButton.addEventListener("click", rrefButtonClicked);
 
-    let lUButton = document.querySelector(".lu-button");
+    let lUButton = document.querySelector("#lu-button");
     lUButton.addEventListener("click", LUButtonClicked);
     </script>
 </body>

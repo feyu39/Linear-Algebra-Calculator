@@ -1,8 +1,64 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    font-family: "Roboto", "Gerogia", sans-serif;
+}
+
+.heading{
+    display: flex;
+    justify-content: center;
+    font-size: 35px;
+    padding: 25px 0px 25px 35px;
+    background-color: #2e5984;
+    color: whitesmoke;
+    font-weight: bold;
+}
+
+.matrix-input{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: #E2E5DE;
+}
+
+.matrix-dimensions{
+    display: flex;
+    gap: 50px;
+}
+
+.button-style{
+    font-size: 14px;
+    font-weight: 200px;
+    padding: 5px 12px;
+    border-radius: 8px;
+    background-color: #2e5984;
+    color: whitesmoke;
+    border: 2px solid black;
+}
+
+.subtitle{
+    font-size: 20px;
+}
+
 .matrix-values{
     margin-top: 30px;
     display: grid;
+    justify-content: center;
     gap: 20px;
     margin-bottom: 30px;
+}
+
+.matrix-operations{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;  
 }
 
 .answer{
@@ -28,4 +84,24 @@
     display: flex;
     font-size: 16px;
     gap: 20px;
+}
+
+.text-matrix {
+    position: relative;
+}
+.text-matrix:before, .text-matrix:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    border: 1px solid #000;
+    width: 6px;
+    height: 100%;
+}
+.text-matrix:before {
+    left: -6px;
+    border-right: 0;
+}
+.text-matrix:after {
+    right: -6px;
+    border-left: 0;
 }
