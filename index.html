@@ -6,34 +6,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linear Algebra Calculator</title>
     <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style id="compiled-css" type="text/css">
+        .math {
+            font-size: 1.2em; font-family: serif; font-style: italic;
+            color: #333; vertical-align: middle; margin: 16px;
+        }
+        .math div, .math span {
+             display: inline-block; vertical-align: middle; 
+        }
+        .math table {
+            display: inline-table; vertical-align: middle;
+            border-collapse: collapse;
+            border-left: 1px solid #999; border-right: 1px solid #999;
+            font-family: monospace; font-style: normal; margin-right: 16px;
+        }
+        .math table td { 
+            text-align: right; padding: 4px 8px; 
+        }
+        .math table tr:first-child td:first-child, .math table tr:first-child td:last-child
+        { 
+            border-top: 1px solid #999; 
+        }
+        .math table tr:last-child td:first-child, .math table tr:last-child td:last-child
+        { 
+            border-bottom: 1px solid #999; 
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.js" integrity="sha512-BbVEDjbqdN3Eow8+empLMrJlxXRj5nEitiCAK5A1pUr66+jLVejo3PmjIaucRnjlB0P9R3rBUs3g5jXc8ti+fQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
-    <div class="heading">
-        <div class="title">Linear Algebra Calculator</div>
-    </div>
-    <div class="matrix-input">
-        <div class="subtitle">Enter your Matrix Dimensions</div>
-        <form class="matrix-dimensions">
-            <input type="text" id="row-dimension">
-            <input type="text" id="column-dimension">
-            <input type="button" class="button-style" id="set-matrix-dimensions" value="Build Matrix">
-        </form>
-    </div>
-    <div class="show-input">
-        <div class="matrix-values">
+    <div class="content">
+        <div class="heading">
+            <div class="title">Linear Algebra Calculator</div>
         </div>
-        <!-- Populate text areas to be able to enter matrix values-->
+        <div class="matrix-input">
+            <div class="subtitle">Enter your Matrix Dimensions</div>
+            <form class="matrix-dimensions">
+                <input type="text" id="row-dimension">
+                <input type="text" id="column-dimension">
+                <input type="button" class="button-style" id="set-matrix-dimensions" value="Build Matrix">
+            </form>
+        </div>
+        <div class="show-input">
+            <div class="matrix-values">
+            </div>
+            <!-- Populate text areas to be able to enter matrix values-->
+        </div>
+        <div class="matrix-operations">Matrix Operations:
+            <button type="button" class="button-style" id="rref">Row Reduced Echelon Form</button>
+            <button type="button" class="button-style" id="lu-button">LU Factorization</button>
+            <button type="button" class="button-style" id="determinant">Determinant</button>
+            <button type="button" class="button-style" id="inverse">Inverse</button>
+        </div>
+        <div class="answer-label">Answer: 
+            <div class="math" id="answer-matrix"></div>
+        </div>
     </div>
-    <div class="matrix-operations">Matrix Operations:
-        <button type="button" class="button-style" id="rref">Row Reduced Echelon Form</button>
-        <button type="button" class="button-style">REF</button>
-        <button type="button" class="button-style" id="lu-button">LU Factorization</button>
-        <button type="button" class="button-style">Nul Space</button>
-        <button type="button" class="button-style">Col Space</button>
-        <button type="button" class="button-style">Inverse</button>
-    </div>
-    <div class="answer-label">Answer: </div>
+    <footer>
+        <p>Copyright (c) 2022 Felix Yu</p>
+    </footer>
 
     <script type="text/javascript">
     function removeMatrixGrid(grid)
@@ -147,93 +179,81 @@
         return matrix;
     }
 
-
-    function showAnswer(matrix)
-    {
-        const rowDimension = matrix.length;
-        const columnDimension = matrix[0].length;
-        let answerGridMain = document.querySelector(".answer-label");
-        let answerGrid = document.createElement("div");
-        answerGrid.classList.add("answer");
-
-        removeMatrixGrid(answerGrid);
-
-        answerGrid.style.gridTemplateColumns = `repeat(${columnDimension}, 40px)`;
-        answerGrid.style.gridTemplateRows = `repeat(${rowDimension}, 40px)`;
-
-        for(let row = 0; row < matrix.length; ++row)
-        {
-            for(let column = 0; column < matrix[0].length; ++column)
-            {
-                let display = document.createElement("div");
-                display.classList.add("answer-number");
-                display.textContent = matrix[row][column];
-                answerGrid.appendChild(display);
-            }
-        }
-        answerGridMain.appendChild(answerGrid);
-    }
-
     function showAnswerTextMatrix(matrix){
         const rowDimension = matrix.length;
         const columnDimension = matrix[0].length;
-        let answerLabel = document.querySelector(".answer-label");
-        let table = document.createElement("table");
-        table.classList.add("text-matrix")
-        for(let row = 0; row < rowDimension; ++row)
-        {
-            const tr = table.insertRow();
-            for(let column = 0; column < columnDimension; ++column)
-            {
-                const td = tr.insertCell();
-                td.textContent = matrix[row][column];
+        const answer = document.getElementById("answer-matrix");
+        removeMatrixGrid(answer);
+        table = document.createElement('table');
+        for (i=0; i < rowDimension; i++) {
+            var row = document.createElement('tr');
+            for (j=-1; j <= columnDimension; j++) {
+                var col = document.createElement('td');
+                col.textContent = matrix[i][j];
+                row.appendChild(col);
             }
+            table.appendChild(row);
         }
+        answer.appendChild(table);
     }
     //to show answer along with a description label left of it
     function showAnswerPlusSpan(matrix, labelText)
     {
+        const answer = document.getElementById("answer-matrix");
+        removeMatrixGrid(answer);
+        const sideLabel = document.createElement("span");
+        sideLabel.textContent = labelText;
+        answer.appendChild(sideLabel);
         const rowDimension = matrix.length;
         const columnDimension = matrix[0].length;
-        let answerGridMain = document.querySelector(".answer-label");
+        table = document.createElement('table');
 
-        let sideLabel = document.createElement("div");
-        sideLabel.textContent = labelText;
-        sideLabel.classList.add("side-label");
-
-        let answerGrid = document.createElement("div");
-        answerGrid.classList.add("answer");
-
-        removeMatrixGrid(answerGrid);
-
-        answerGrid.style.gridTemplateColumns = `repeat(${columnDimension}, 30px)`;
-        answerGrid.style.gridTemplateRows= `repeat(${rowDimension}, 30px)`;
-        
-        for(let row = 0; row < matrix.length; ++row)
-        {
-            for(let column = 0; column < matrix[0].length; ++column)
-            {
-                let display = document.createElement("div");
-                display.classList.add("answer-number");
-                display.textContent = matrix[row][column];
-                answerGrid.insertAdjacentElement("beforeend", display);
+        for (i=0; i < rowDimension; i++) {
+            var row = document.createElement('tr');
+            for (j=-1; j <= columnDimension; j++) {
+                var col = document.createElement('td');
+                col.textContent = matrix[i][j];
+                row.appendChild(col);
             }
+            table.appendChild(row);
         }
-        sideLabel.appendChild(answerGrid);
-        answerGridMain.appendChild(sideLabel);
+        answer.appendChild(table);
     }
 
     function rrefButtonClicked(){
         let matrix = populateMatrix2dArray();
         const reducedMatrix = reduceRowEchelonFormCalc(matrix);
-        showAnswer(reducedMatrix);
+        showAnswerTextMatrix(matrix);
     }
 
     function LUButtonClicked(){
         let matrix = populateMatrix2dArray();
         const lUMatrix = math.lup(matrix);
-        showAnswerPlusSpan(lUMatrix["L"], "L: ");
-        showAnswerPlusSpan(lUMatrix["U"], "U:");
+        showAnswerPlusSpan(lUMatrix["L"], "L = ");
+        showAnswerPlusSpan(lUMatrix["U"], "U = ");
+    }
+
+    function determinantButtonClicked()
+    {
+        let matrix = populateMatrix2dArray();
+        const determinant = math.det(matrix);
+        const answer = document.createElement("div");
+        answer.textContent = "det(A) = " + determinant;
+        const answerLabel = document.querySelector(".answer-label");
+        removeMatrixGrid(answerLabel);
+        answerLabel.appendChild(answer);
+    }
+    function inverseButtonClicked()
+    {
+        let matrix = populateMatrix2dArray();
+        try{
+        const inverseMat = math.inv(matrix);
+        showAnswerTextMatrix(inverseMat);
+        }
+        catch(err)
+        {
+            document.querySelector(".answer-label").textContent = err.message;
+        }
     }
     setMatrixDimensionPlaceholder();
     let matDimensionsButton = document.querySelector("#set-matrix-dimensions");
@@ -244,6 +264,12 @@
 
     let lUButton = document.querySelector("#lu-button");
     lUButton.addEventListener("click", LUButtonClicked);
+
+    let determinantButton = document.querySelector("#determinant");
+    determinantButton.addEventListener("click", determinantButtonClicked);
+
+    let inverseButton = document.querySelector("#inverse");
+    inverseButton.addEventListener("click", inverseButtonClicked);
     </script>
 </body>
 </html>
